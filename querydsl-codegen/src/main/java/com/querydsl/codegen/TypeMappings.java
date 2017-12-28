@@ -65,6 +65,8 @@ public abstract class TypeMappings {
     }
 
     public Type getPathType(Type type, EntityType model, boolean raw) {
+        System.out.println("querydsl-codegen::TypeMappings.getPathType:67(type=" +
+            type + ", model=" + model + ", raw=" + raw + ")");
         return getPathType(type, model, raw, false, false);
     }
 
@@ -72,6 +74,8 @@ public abstract class TypeMappings {
         if (queryTypes.containsKey(type.getFullName())) {
             return queryTypes.get(type.getFullName());
         } else {
+            System.out.println("querydsl-codegen::TypeMappings.getPathType:73(pathTypes=" +
+                    pathTypes.toString() + ", type=" + type + ", model=" + model + ", raw=" + raw + ")");
             return getQueryType(pathTypes, type, model, raw, rawParameters, extend);
         }
     }
@@ -79,16 +83,28 @@ public abstract class TypeMappings {
     private Type getQueryType(Map<TypeCategory, Type> types, Type type, EntityType model, boolean raw,
             boolean rawParameters, boolean extend) {
         Type exprType = types.get(type.getCategory());
+        System.out.println("querydsl-codegen::TypeMappings.getPathType:83(type=" + type + ", model=" + model +
+                ", exprType=" + exprType + ", raw=" + raw + ")");
         return getQueryType(type, model, exprType, raw, rawParameters, extend);
     }
 
     public Type getQueryType(Type type, EntityType model, Type exprType, boolean raw,
             boolean rawParameters, boolean extend) {
         TypeCategory category = type.getCategory();
+
+        System.out.println("querydsl-codegen::TypeMappings.getPathType:91(type=" + type + ", model=" + model +
+                ", exprType=" + exprType + ", raw=" + raw + ", category=" + category.toString() + ")");
+
         if (raw && category != TypeCategory.ENTITY && category != TypeCategory.CUSTOM) {
+            System.out.println("\tReturning: " + exprType + ", raw is True");
             return exprType;
 
-        } else if (category == TypeCategory.STRING || category == TypeCategory.BOOLEAN) {
+        } else if (category == TypeCategory.STRING || category == TypeCategory.BOOLEAN ||
+                category == TypeCategory.UUID) {
+            System.out.println("\tReturning: " + exprType + ", raw is False");
+            if (category == TypeCategory.UUID) {
+                new Exception().printStackTrace();
+            }
             return exprType;
 
         } else {
@@ -98,6 +114,7 @@ public abstract class TypeMappings {
             if (!type.isFinal() && extend) {
                 type = new TypeExtends(type);
             }
+            System.out.println("\tReturning new SimpleType:exprType:" + exprType + ",type:" + type);
             return new SimpleType(exprType, type);
 
         }

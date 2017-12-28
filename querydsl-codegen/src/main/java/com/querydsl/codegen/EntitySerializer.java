@@ -706,6 +706,9 @@ public class EntitySerializer implements Serializer {
             String localRawName = writer.getRawName(property.getType());
             String inits = getInits(property);
 
+            System.out.println("EntitySerializer.serializeProperties::property.getType().getCategory(): " +
+                    property.getType().getCategory());
+
             switch (property.getType().getCategory()) {
             case STRING:
                 serialize(model, property, queryType, writer, "createString");
@@ -719,6 +722,13 @@ public class EntitySerializer implements Serializer {
                 serialize(model, property, queryType, writer, "createSimple", writer.getClassConstant(localRawName));
                 break;
 
+            case UUID:
+
+                System.out.println("EntitySerializer.serializeProperties::model: " + model + ", property: " +
+                        property + ", queryType: " + queryType + ", localRawName: " + localRawName);
+
+                serialize(model, property, queryType, writer, "createComparable", writer.getClassConstant(localRawName));
+                break;
             case COMPARABLE:
                 serialize(model, property, queryType, writer, "createComparable", writer.getClassConstant(localRawName));
                 break;

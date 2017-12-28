@@ -45,6 +45,8 @@ public class JavaTypeMappings extends TypeMappings {
 
         register(TypeCategory.CUSTOM,     Expression.class,           Path.class,           SimpleTemplate.class);
         register(TypeCategory.ENTITY,     Expression.class,           Path.class,           SimpleTemplate.class);
+
+        register(TypeCategory.UUID,       ComparableExpression.class, ComparablePath.class, ComparableTemplate.class);
     }
 
 
